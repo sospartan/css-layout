@@ -14,7 +14,14 @@ namespace Facebook.CSSLayout
 {
     internal static class Native
     {
-        private const string DllName = "CSSLayout.dll";
+#if UNITY_IOS && !UNITY_EDITOR
+        private const string DllName = "__Internal";
+#else
+        private const string DllName = "CSSLayout";
+#endif
+
+        [DllImport(DllName)]
+        public static extern void CSSAssertSetFailFunc(CSSAssert.FailFunc func);
 
         [DllImport(DllName)]
         public static extern IntPtr CSSNodeNew();
@@ -24,6 +31,9 @@ namespace Facebook.CSSLayout
 
         [DllImport(DllName)]
         public static extern void CSSNodeFree(IntPtr cssNode);
+
+        [DllImport(DllName)]
+        public static extern int CSSNodeGetInstanceCount();
 
         [DllImport(DllName)]
         public static extern void CSSNodeInsertChild(IntPtr node, IntPtr child, uint index);
@@ -47,12 +57,14 @@ namespace Facebook.CSSLayout
         public static extern void CSSNodeMarkDirty(IntPtr node);
 
         [DllImport(DllName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool CSSNodeIsDirty(IntPtr node);
 
         [DllImport(DllName)]
         public static extern void CSSNodePrint(IntPtr node, CSSPrintOptions options);
 
         [DllImport(DllName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool CSSValueIsUndefined(float value);
 
         #region CSS_NODE_PROPERTY
@@ -76,15 +88,17 @@ namespace Facebook.CSSLayout
         public static extern CSSPrintFunc CSSNodeGePrintFunc(IntPtr node);
 
         [DllImport(DllName)]
-        public static extern void CSSNodeSetIsTextnode(IntPtr node, bool isTextNode);
+        public static extern void CSSNodeSetIsTextnode(IntPtr node, [MarshalAs(UnmanagedType.I1)] bool isTextNode);
 
         [DllImport(DllName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool CSSNodeGetIsTextnode(IntPtr node);
 
         [DllImport(DllName)]
-        public static extern void CSSNodeSetHasNewLayout(IntPtr node, bool hasNewLayout);
+        public static extern void CSSNodeSetHasNewLayout(IntPtr node, [MarshalAs(UnmanagedType.I1)] bool hasNewLayout);
 
         [DllImport(DllName)]
+        [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool CSSNodeGetHasNewLayout(IntPtr node);
 
         #endregion
