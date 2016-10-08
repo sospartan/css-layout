@@ -24,6 +24,7 @@ sourceSets {
     main {
         java {
             srcDirs = ['java']
+            exclude 'jni'
         }
     }
 }
