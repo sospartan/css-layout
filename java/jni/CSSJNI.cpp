@@ -41,6 +41,10 @@ static inline CSSNodeRef _jlong2CSSNodeRef(jlong addr) {
   return reinterpret_cast<CSSNodeRef>(static_cast<intptr_t>(addr));
 }
 
+jint jni_CSSNodeGetInstanceCount(alias_ref<jclass> clazz) {
+  return CSSNodeGetInstanceCount();
+}
+
 jlong jni_CSSNodeNew(alias_ref<jobject> thiz) {
   const CSSNodeRef node = CSSNodeNew();
   auto globalThiz = make_global(thiz);
@@ -168,7 +172,7 @@ CSS_NODE_JNI_LAYOUT_PROP(jint, CSSDirection, Direction);
 
 jint JNI_OnLoad(JavaVM *vm, void *) {
   return initialize(vm, [] {
-    registerNatives("com/facebook/csslayout/CSSNodeJNI",
+    registerNatives("com/facebook/csslayout/CSSNode",
                     {
                         CSSMakeNativeMethod(jni_CSSNodeNew),
                         CSSMakeNativeMethod(jni_CSSNodeFree),
@@ -234,6 +238,8 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
                         CSSMakeNativeMethod(jni_CSSNodeLayoutGetWidth),
                         CSSMakeNativeMethod(jni_CSSNodeLayoutGetHeight),
                         CSSMakeNativeMethod(jni_CSSNodeLayoutGetDirection),
+
+                        CSSMakeNativeMethod(jni_CSSNodeGetInstanceCount),
                     });
   });
 }
