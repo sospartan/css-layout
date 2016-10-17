@@ -11,3 +11,5 @@
 .vscode
 build
 .gradle
+local.properties
+.idea
