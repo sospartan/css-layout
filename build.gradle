@@ -25,12 +25,16 @@ sourceSets {
         java {
             srcDirs = ['java']
             exclude 'jni'
+            exclude 'tests'
+            exclude '**/proguard/**'
+            exclude '**/csslayout/CSSNode.java'
+            exclude '**/BUCK'
         }
     }
 }
 
 jar {
-    from sourceSets.main.allSource
+    from sourceSets.main.java
     manifest {
         attributes(
             'Implementation-Title': project.name,
@@ -49,9 +53,10 @@ dependencies {
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
-    testCompile 'junit:junit:4.12'
+    compile 'junit:junit:4.12'
 
     compile files('lib/infer-annotations/infer-annotations-1.4.jar')
     compile files('lib/jsr-305/jsr305.jar')
+//    compile 'com.facebook.soloader:soloader:aar:0.1.0'
     compile(name:'soloader-0.1.0',ext:'aar')
 }
