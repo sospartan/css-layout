@@ -24,7 +24,7 @@ import static com.facebook.csslayout.CSSLayout.POSITION_TOP;
  * A CSS Node. It has a style object you can manipulate at {@link #style}. After calling
  * {@link #calculateLayout()}, {@link #layout} will be filled with the results of the layout.
  */
-public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
+public class CSSNodeDEPRECATED<T extends CSSNodeDEPRECATED> implements CSSNodeAPI<T> {
 
   private enum LayoutState {
     /**
@@ -52,10 +52,10 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
 
   public int lineIndex = 0;
 
-  CSSNodeDEPRECATED nextChild;
+  T nextChild;
 
-  private @Nullable ArrayList<CSSNodeDEPRECATED> mChildren;
-  private @Nullable CSSNodeDEPRECATED mParent;
+  private @Nullable ArrayList<T> mChildren;
+   @Nullable T mParent;
   private @Nullable MeasureFunction mMeasureFunction = null;
   private LayoutState mLayoutState = LayoutState.DIRTY;
   private boolean mIsTextNode = false;
@@ -72,13 +72,13 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
   }
 
   @Override
-  public CSSNodeDEPRECATED getChildAt(int i) {
+  public T getChildAt(int i) {
     Assertions.assertNotNull(mChildren);
     return mChildren.get(i);
   }
 
   @Override
-  public void addChildAt(CSSNodeDEPRECATED child, int i) {
+  public void addChildAt(T child, int i) {
     if (child.mParent != null) {
       throw new IllegalStateException("Child already has a parent, it must be removed first.");
     }
@@ -93,9 +93,9 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
   }
 
   @Override
-  public CSSNodeDEPRECATED removeChildAt(int i) {
+  public T removeChildAt(int i) {
     Assertions.assertNotNull(mChildren);
-    CSSNodeDEPRECATED removed = mChildren.remove(i);
+    T removed = mChildren.remove(i);
     removed.mParent = null;
     dirty();
     return removed;
@@ -103,7 +103,7 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
 
   @Override
   public @Nullable
-  CSSNodeDEPRECATED getParent() {
+  T getParent() {
     return mParent;
   }
 
@@ -111,7 +111,7 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
    * @return the index of the given child, or -1 if the child doesn't exist in this node.
    */
   @Override
-  public int indexOf(CSSNodeDEPRECATED child) {
+  public int indexOf(T child) {
     Assertions.assertNotNull(mChildren);
     return mChildren.indexOf(child);
   }
@@ -207,7 +207,7 @@ public class CSSNodeDEPRECATED implements CSSNodeAPI<CSSNodeDEPRECATED> {
     mLayoutState = LayoutState.UP_TO_DATE;
   }
 
-  private void toStringWithIndentation(StringBuilder result, int level) {
+  protected void toStringWithIndentation(StringBuilder result, int level) {
     // Spaces and tabs are dropped by IntelliJ logcat integration, so rely on __ instead.
     StringBuilder indentation = new StringBuilder();
     for (int i = 0; i < level; ++i) {
